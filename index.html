@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoping Card</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dard">
+            <div class="container">
+                <a class="navbar-brand" href="#">Tech Shop</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="checkout.html">
+                               
+                                <i class="fa-solid fa-cart-shopping text-warning" style="position: relative;">
+                                    <span style="position:absolute; top:-10px; padding: 4px; border-radius: 30%;
+                                     background-color:rgb(247, 186, 6) !important; color: #fff; font-size: 6px;" id="card-quantity">5</span>
+                                </i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Product</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#skills">Support</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="checkout.html">Check Out</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Contact</a>
+                        </li>
+
+
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+
+        <section>
+            <div class="container py-5">
+
+                <h1>Product Details</h1>
+                <div id="product-container" class="row px-5"></div>
+            </div>
+        </section>
+    </main>
+            
+    
+
+    <footer class="bg-light pt-4 py-4 text-center">
+
+        <div class="container ">
+            <a href="" class="me-3" >
+                <i class="fa-brands fa-facebook fa-2x"></i>
+            </a>
+            <a href="" class="me-3" >
+                <i class="fa-brands fa-instagram fa-2x"></i>
+            </a>
+            <a href="" class="me-3" >
+                <i class="fa-brands fa-twitter fa-2x"></i>
+            </a>
+            <a href="" class="me-3" >
+                <i class="fa-brands fa-linkedin fa-2x"></i>
+            </a>
+        </div>
+        <p>
+            &copy; 2025 all right reserved
+        </p>
+        <div>
+
+        </div>
+        
+    </footer>
+    <script>
+        // Fetch the JSON file
+        
+        function fetch_product()
+        {
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+
+            let total_items=0;
+            products.forEach(product => {  
+
+                if(product.is_checked==true){
+                    total_items+=product.quantity;                
+                }
+                
+            });
+
+            document.getElementById("card-quantity").innerHTML=total_items;
+           
+        }
+
+        window.onload = fetch_product;
+        fetch('product_image.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Store the JSON object in a variable
+                const productData = data;
+
+                // Log the product data
+               // let total_items=0;
+                productData.forEach(product => {
+                   // if(product.is_checked) total_items+=product.quantity;
+                    view_product(product);
+                });
+
+               
+            })
+            .catch(error => {
+                console.error('Error fetching JSON:', error);
+            });
+
+            
+
+            function view_product(data){
+                const productContainer = document.getElementById('product-container');
+
+                const newCol = document.createElement('div');
+                newCol.className = 'col-lg-3 col-md-4 col-sm-6 col-sx-12';
+                const maxLength = 100;
+                const trimmedText = data.description.length > maxLength ? data.description.substring(0, maxLength) + '...' : data.description;
+               
+                newCol.innerHTML = `<div class="card my-3" style=" ">
+                                        <img src="${data.image}" class="img-fluid" alt="..." style="height: 400px !important; width:100%">
+                                        <div class="card-body" style="min-height:15rem">
+                                            <h5 class="card-title">${data.title}</h5>
+                                            <p class="card-text text-wrap">
+                                                ${trimmedText}
+                                                <button class="btn btn-link p-2" id="read-more-btn" style="">Read More</button>
+                                            </p>
+                                            
+                                             <p class="card-text">Price:৳  ${data.price}</p>
+                                            <a onclick='add_product(${data.id})' class="btn btn-primary">Add To Card</a>
+                                        </div>
+                                    </div>`;
+
+                // Append the new div to the parent
+                productContainer.appendChild(newCol);
+
+
+               // productContainer.appendChild(product);
+
+            }
+            
+            function add_product(product_id){
+                
+                fetch('./product_image.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                      
+                        // Find the object with id 5
+                        const product = data.find(item => item.id === product_id);
+                       
+                        let products = JSON.parse(localStorage.getItem("products")) || [];
+                       
+                        let title       =product.title;
+                        let description =product.description;
+                        let price       =product.price;
+                        let id          =product.id;
+                        let image       =product.image;
+                        let is_checked    =true;
+                        let quantity    =1;
+                        let amount      =quantity*product.price;
+                        const checkout_product = { id, title,description,price, image, quantity, amount,is_checked }
+                        products.push(checkout_product);
+                        localStorage.setItem("products", JSON.stringify(products));
+                        console.log(products);
+                        // Display the product data in the HTML
+                        if (!product) {
+                           
+                            console.log('Product not found.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching the JSON file:', error);
+                    });
+               
+               
+            }
+
+            function get_product()
+            {
+                
+                fetch('./product_image.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                      
+                        // Find the object with id 5
+                        const product = data.find(item => item.id === 5);
+
+                        // Display the product data in the HTML
+                        if (!product) {
+                           
+                            console.log('Product not found.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching the JSON file:', error);
+                    });
+
+                return product;
+        
+            }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
