@@ -80,14 +80,16 @@
                                 <span>Shipping Fee</span>
                                 <span>৳ 150</span>
                             </div>
-                            <input type="text" class="form-control mt-2" placeholder="Enter Voucher Code">
-                            <button class="btn btn-primary w-100 mt-2">APPLY</button>
+                            <input type="text" id="promo_code" name="promo_code" class="form-control mt-2" placeholder="Enter Promo Code">
+                            <button class="btn btn-primary w-100 mt-2" onclick="apply_promocode()">APPLY</button>
                             <hr>
                             <div class="d-flex justify-content-between">
                                 <strong>Total</strong>
                                 <strong class="text-danger">৳ <span id="total_amount"> 0</span></strong>
                             </div>
                             <button class="btn btn-warning text-white w-100 mt-2">PROCEED TO CHECKOUT (0)</button>
+                            <input type="hidden" id="hidden_subtotal" name="hidden_subtotal" />
+                       
                         </div>
                     </div>
                 </div>
@@ -123,6 +125,30 @@
     </footer>
     <script>
         // Fetch the JSON file
+
+        function apply_promocode()
+        {
+            let promo_code=document.getElementById("promo_code").value;
+
+            if(promo_code=="ostad10" || promo_code=="ostad5")
+            {
+                let subtotal_amount=document.getElementById("hidden_subtotal").value*1;
+                let discount=0;
+                if(promo_code=="ostad10")  discount=10;
+                else  discount=5;
+               // console.log(subtotal_amount);
+               // subtotal_amount=subtotal_amount-(subtotal_amount*discount/100);
+               // console.log(subtotal_amount);
+                let total_amount=subtotal_amount+150;
+                total_amount=(total_amount-(total_amount*discount/100)).toFixed(2);
+               // document.getElementById("subtotal_amount").innerHTML=subtotal_amount.toFixed(2);
+                document.getElementById("total_amount").innerHTML=total_amount;
+            }
+            else{
+                alert(" Invalid Promo Code , Please try with Valid One !")
+            }
+
+        }
         function fetch_product()
         {
             let products = JSON.parse(localStorage.getItem("products")) || [];
@@ -180,15 +206,13 @@
             document.getElementById("card-quantity").innerHTML=total_items;
             document.getElementById("subtotal_item").innerHTML=total_items;
             document.getElementById("subtotal_amount").innerHTML=total_amount;
+            document.getElementById("hidden_subtotal").value=total_amount;
+            
 
             
         }
 
         window.onload = fetch_product;
-
-        function decrease_quantity(product)
-        {
-        }
        
 
         function delete_items()
@@ -208,6 +232,7 @@
             document.getElementById("card-quantity").innerHTML=total_items;
             document.getElementById("subtotal_item").innerHTML=total_items;
             document.getElementById("subtotal_amount").innerHTML=total_amount;
+            document.getElementById("hidden_subtotal").value=total_amount;
             fetch_product();
         }
 
@@ -221,7 +246,7 @@
             span.innerHTML = product.quantity;
             console.log(product.quantity)
 
-             let products = JSON.parse(localStorage.getItem("products")) || [];
+            let products = JSON.parse(localStorage.getItem("products")) || [];
             products = products.map(p => p.id === product.id ? product : p);
           
             localStorage.setItem("products",JSON.stringify(products));
@@ -241,6 +266,7 @@
             document.getElementById("card-quantity").innerHTML=total_items;
             document.getElementById("subtotal_item").innerHTML=total_items;
             document.getElementById("subtotal_amount").innerHTML=total_amount;
+            document.getElementById("hidden_subtotal").value=total_amount;
         }
 
         function decrease_quantity(product)
@@ -275,6 +301,7 @@
             document.getElementById("card-quantity").innerHTML=total_items;
             document.getElementById("subtotal_item").innerHTML=total_items;
             document.getElementById("subtotal_amount").innerHTML=total_amount;
+            document.getElementById("hidden_subtotal").value=total_amount;
         }
 
         function checked_items_all()
@@ -302,6 +329,7 @@
             document.getElementById("card-quantity").innerHTML=total_items;
             document.getElementById("subtotal_item").innerHTML=total_items;
             document.getElementById("subtotal_amount").innerHTML=total_amount;
+            document.getElementById("hidden_subtotal").value=total_amount;
 
         }
 
@@ -334,6 +362,7 @@
             document.getElementById("card-quantity").innerHTML=total_items;
             document.getElementById("subtotal_item").innerHTML=total_items;
             document.getElementById("subtotal_amount").innerHTML=total_amount;
+            document.getElementById("hidden_subtotal").value=total_amount;
 
         }
 
